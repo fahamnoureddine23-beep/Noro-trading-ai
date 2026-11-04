@@ -1,0 +1,529 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090b13">
+  <title>AI Trading Pro</title>
+  <style>
+    :root {
+      --bg:#090b13;
+      --panel:#111522;
+      --panel2:#171d2d;
+      --border:#252d40;
+      --text:#f3f5ff;
+      --muted:#8992a8;
+      --green:#00e5a0;
+      --red:#ff5575;
+      --purple:#9167ff;
+      --blue:#4b9cff;
+    }
+    * { box-sizing:border-box; }
+    body {
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:Inter,Arial,sans-serif;
+    }
+    button,select,input { font:inherit; }
+    .app { max-width:1200px; margin:auto; padding:20px; }
+    header {
+      display:flex; justify-content:space-between;
+      align-items:center; gap:15px; flex-wrap:wrap;
+      padding:12px 0 25px;
+    }
+    .brand { display:flex; align-items:center; gap:12px; }
+    .logo {
+      width:43px;height:43px;border-radius:13px;
+      display:grid;place-items:center;
+      background:linear-gradient(135deg,#9167ff,#4b9cff);
+      font-size:23px;font-weight:bold;
+    }
+    h1 { font-size:21px;margin:0; }
+    .subtitle { color:var(--muted);font-size:12px;margin-top:5px; }
+    .status {
+      padding:9px 13px;border-radius:20px;
+      border:1px solid #235d4d;color:var(--green);
+      font-size:12px;
+    }
+    .notice {
+      background:#211b36;border:1px solid #493b71;
+      padding:13px 15px;border-radius:12px;
+      color:#d2c5ff;font-size:12px;line-height:1.6;
+      margin-bottom:20px;
+    }
+    .grid {
+      display:grid;grid-template-columns:repeat(4,1fr);
+      gap:14px;margin-bottom:18px;
+    }
+    .card {
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:16px;padding:18px;
+      min-width:0;
+    }
+    .label { color:var(--muted);font-size:12px; }
+    .value { font-size:25px;font-weight:750;margin-top:12px; }
+    .green { color:var(--green); }
+    .red { color:var(--red); }
+    .section-title {
+      font-size:16px;font-weight:700;margin:0 0 15px;
+    }
+    .main-grid {
+      display:grid;grid-template-columns:1.5fr 1fr;gap:15px;
+    }
+    .market-row {
+      display:flex;align-items:center;justify-content:space-between;
+      padding:13px 0;border-bottom:1px solid var(--border);
+      gap:10px;
+    }
+    .market-row:last-child { border:0; }
+    .coin { font-weight:700; }
+    .muted { color:var(--muted);font-size:11px;margin-top:4px; }
+    .price { text-align:right;font-weight:700; }
+    .settings { display:grid;grid-template-columns:1fr 1fr;gap:12px; }
+    .field label {
+      display:block;color:var(--muted);
+      font-size:12px;margin-bottom:8px;
+    }
+    input,select {
+      width:100%;padding:12px;
+      background:var(--panel2);border:1px solid var(--border);
+      color:white;border-radius:10px;outline:none;
+    }
+    input:focus,select:focus { border-color:var(--purple); }
+    .wide { grid-column:1/-1; }
+    .range-line {
+      display:flex;justify-content:space-between;
+      color:var(--muted);font-size:12px;margin-bottom:8px;
+    }
+    input[type=range] { padding:0;accent-color:var(--purple); }
+    .leverage {
+      font-size:23px;color:var(--purple);font-weight:800;
+    }
+    .button {
+      border:0;border-radius:11px;padding:13px;
+      font-weight:750;cursor:pointer;width:100%;
+      color:white;background:linear-gradient(120deg,#7955e8,#4b83ee);
+    }
+    .button.secondary {
+      background:#222a3b;border:1px solid var(--border);
+    }
+    .button:disabled { opacity:.5;cursor:not-allowed; }
+    .signal {
+      padding:15px;border-radius:12px;
+      background:var(--panel2);margin-top:12px;
+    }
+    .signal-head {
+      display:flex;justify-content:space-between;align-items:center;
+      gap:10px;
+    }
+    .tag {
+      padding:6px 10px;border-radius:20px;
+      font-size:11px;font-weight:bold;
+      background:#1d3c34;color:var(--green);
+    }
+    .tag.wait { background:#393124;color:#ffce78; }
+    .chart-wrap { height:235px;width:100%;margin-top:10px; }
+    canvas { width:100%;height:100%; }
+    .footer {
+      color:var(--muted);font-size:11px;
+      text-align:center;padding:25px 0;
+    }
+    .small-note {
+      color:var(--muted);font-size:11px;line-height:1.6;
+      margin-top:12px;
+    }
+    @media(max-width:760px) {
+      .grid { grid-template-columns:repeat(2,1fr); }
+      .main-grid { grid-template-columns:1fr; }
+      .app { padding:14px; }
+      .value { font-size:21px; }
+    }
+    @media(max-width:380px) {
+      .settings { grid-template-columns:1fr; }
+      .wide { grid-column:auto; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="brand">
+      <div class="logo">AI</div>
+      <div>
+        <h1>AI TRADING PRO</h1>
+        <div class="subtitle">Intelligence • Analyse • Performance</div>
+      </div>
+    </div>
+    <div class="status">● Marché connecté</div>
+  </header>
+
+  <div class="notice">
+    ⚠ MODE SIMULATION — Les prix proviennent du marché public Binance.
+    Aucune transaction réelle n'est exécutée. Le trading avec effet de levier
+    comporte un risque élevé de perte et de liquidation.
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="label">Capital virtuel</div>
+      <div class="value" id="balance">10 000 $</div>
+      <div class="muted">Compte de simulation</div>
+    </div>
+    <div class="card">
+      <div class="label">Profit / Perte</div>
+      <div class="value green" id="profit">0.00 $</div>
+      <div class="muted">Résultat simulé</div>
+    </div>
+    <div class="card">
+      <div class="label">Prix BTC / USDT</div>
+      <div class="value" id="btcPrice">--</div>
+      <div class="muted" id="btcChange">Chargement...</div>
+    </div>
+    <div class="card">
+      <div class="label">État du système</div>
+      <div class="value green" style="font-size:19px">ACTIF</div>
+      <div class="muted">Surveillance du marché</div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <div class="card">
+      <h2 class="section-title">📊 Marchés en direct</h2>
+      <div id="markets">
+        <div class="market-row">Chargement des marchés...</div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="chart"></canvas>
+      </div>
+      <div class="small-note">
+        Données publiques Binance. Les cours peuvent subir des variations rapides.
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h2 class="section-title">⚙ Configuration du trading</h2>
+        <div class="settings">
+          <div class="field wide">
+            <label>Paire de trading</label>
+            <select id="pair">
+              <option>BTCUSDT</option>
+              <option>ETHUSDT</option>
+              <option>BNBUSDT</option>
+              <option>SOLUSDT</option>
+              <option>XRPUSDT</option>
+              <option>ADAUSDT</option>
+            </select>
+          </div>
+
+          <div class="field wide">
+            <div class="range-line">
+              <label>Effet de levier (simulation)</label>
+              <span class="leverage" id="levText">2x</span>
+            </div>
+            <input type="range" id="leverage" min="1" max="100" value="2">
+            <div class="range-line">
+              <span>1x</span><span>100x</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Capital par position ($)</label>
+            <input type="number" id="amount" min="1" max="10000" value="100">
+          </div>
+          <div class="field">
+            <label>Stop Loss (%)</label>
+            <input type="number" id="stop" min="0.1" max="20" step="0.1" value="1">
+          </div>
+          <div class="field">
+            <label>Take Profit (%)</label>
+            <input type="number" id="target" min="0.1" max="50" step="0.1" value="2">
+          </div>
+          <div class="field">
+            <label>Risque maximum (%)</label>
+            <input type="number" id="risk" min="0.1" max="5" step="0.1" value="1">
+          </div>
+        </div>
+
+        <div class="small-note" id="riskInfo">
+          Levier sélectionné : 2x. Simulation uniquement.
+        </div>
+        <button class="button" id="start" style="margin-top:15px">
+          ▶ Démarrer la simulation
+        </button>
+        <button class="button secondary" id="stopBtn" style="margin-top:9px">
+          ■ Arrêter
+        </button>
+      </div>
+
+      <div class="card" style="margin-top:15px">
+        <h2 class="section-title">🤖 Analyse du marché</h2>
+        <div class="signal">
+          <div class="signal-head">
+            <strong id="signalTitle">Analyse en cours</strong>
+            <span class="tag wait" id="signalTag">ATTENTE</span>
+          </div>
+          <p class="muted" id="signalDesc">
+            Collecte des données de marché...
+          </p>
+          <div class="range-line">
+            <span>Confiance indicative</span>
+            <strong id="confidence">--</strong>
+          </div>
+        </div>
+        <div class="small-note">
+          Analyse technique simplifiée basée sur les moyennes mobiles.
+          Ce n'est pas une prédiction garantie ni un modèle d'IA entraîné.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:15px">
+    <h2 class="section-title">📜 Historique des simulations</h2>
+    <div id="history" class="muted">Aucune simulation pour le moment.</div>
+  </div>
+
+  <div class="footer">
+    AI Trading Pro © 2026 — Outil d'analyse et de simulation.
+    Le trading comporte un risque de perte en capital.
+  </div>
+</div>
+
+<script>
+"use strict";
+
+const $ = id => document.getElementById(id);
+const API = "https://data-api.binance.vision";
+let prices = {};
+let candles = [];
+let running = false;
+let virtualBalance = 10000;
+let virtualProfit = 0;
+let timer = null;
+
+function money(n) {
+  return Number(n).toLocaleString("fr-FR", {
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+  }) + " $";
+}
+
+async function getJSON(url) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("Erreur réseau " + response.status);
+  return response.json();
+}
+
+async function loadMarkets() {
+  try {
+    const symbols = ["BTCUSDT","ETHUSDT","BNBUSDT","SOLUSDT","XRPUSDT","ADAUSDT"];
+    const results = await getJSON(API + "/api/v3/ticker/24hr");
+    const selected = results.filter(x => symbols.includes(x.symbol));
+
+    $("markets").innerHTML = selected.map(item => {
+      const change = Number(item.priceChangePercent);
+      prices[item.symbol] = Number(item.lastPrice);
+      return `
+        <div class="market-row">
+          <div>
+            <div class="coin">${item.symbol.replace("USDT","")} / USDT</div>
+            <div class="muted">Volume 24h: ${Number(item.volume).toFixed(2)}</div>
+          </div>
+          <div class="price">
+            ${Number(item.lastPrice).toLocaleString("fr-FR")}
+            <div class="${change >= 0 ? "green":"red"}" style="font-size:12px;margin-top:5px">
+              ${change >= 0 ? "+" : ""}${change.toFixed(2)}%
+            </div>
+          </div>
+        </div>`;
+    }).join("");
+
+    $("btcPrice").textContent =
+      Number(prices.BTCUSDT).toLocaleString("fr-FR") + " $";
+
+    const btc = selected.find(x => x.symbol === "BTCUSDT");
+    if (btc) {
+      const change = Number(btc.priceChangePercent);
+      $("btcChange").textContent =
+        (change >= 0 ? "+" : "") + change.toFixed(2) + "% / 24h";
+      $("btcChange").className = change >= 0 ? "muted green":"muted red";
+    }
+  } catch(error) {
+    $("markets").innerHTML =
+      '<div class="muted">Impossible de charger les données. Vérifiez votre connexion.</div>';
+  }
+}
+
+async function loadChart() {
+  try {
+    const pair = $("pair").value;
+    candles = await getJSON(
+      API + "/api/v3/klines?symbol=" + pair + "&interval=1h&limit=40"
+    );
+    drawChart();
+    analyse();
+  } catch(error) {
+    $("signalTitle").textContent = "Données indisponibles";
+    $("signalDesc").textContent = "Réessayez plus tard.";
+  }
+}
+
+function drawChart() {
+  const canvas = $("chart");
+  const rect = canvas.getBoundingClientRect();
+  if (!rect.width || !rect.height) return;
+
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr,dpr);
+
+  const w = rect.width, h = rect.height;
+  ctx.clearRect(0,0,w,h);
+
+  if (!candles.length) return;
+
+  const values = candles.map(c => Number(c[4]));
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const padding = 18;
+  const range = max-min || 1;
+
+  ctx.strokeStyle = "#252d40";
+  ctx.lineWidth = 1;
+  for(let i=1;i<4;i++) {
+    const y = h*i/4;
+    ctx.beginPath();
+    ctx.moveTo(0,y);
+    ctx.lineTo(w,y);
+    ctx.stroke();
+  }
+
+  ctx.beginPath();
+  values.forEach((v,i) => {
+    const x = padding + i*(w-padding*2)/(values.length-1);
+    const y = h-padding - ((v-min)/range)*(h-padding*2);
+    if(i===0) ctx.moveTo(x,y);
+    else ctx.lineTo(x,y);
+  });
+  ctx.strokeStyle = "#9167ff";
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
+  ctx.lineTo(w-padding,h);
+  ctx.lineTo(padding,h);
+  ctx.closePath();
+  ctx.fillStyle = "rgba(145,103,255,0.10)";
+  ctx.fill();
+}
+
+function average(arr) {
+  return arr.reduce((a,b)=>a+b,0)/arr.length;
+}
+
+function analyse() {
+  if(candles.length < 25) return;
+
+  const closes = candles.map(c=>Number(c[4]));
+  const shortMA = average(closes.slice(-7));
+  const longMA = average(closes.slice(-25));
+  const last = closes[closes.length-1];
+
+  let title, description, tag, confidence;
+
+  if(shortMA > longMA && last > shortMA) {
+    title = "Tendance haussière";
+    description = "La moyenne mobile courte est supérieure à la moyenne longue.";
+    tag = "ACHAT POTENTIEL";
+    confidence = "Signal indicatif";
+  } else if(shortMA < longMA && last < shortMA) {
+    title = "Tendance baissière";
+    description = "La moyenne mobile courte est inférieure à la moyenne longue.";
+    tag = "VENTE POTENTIELLE";
+    confidence = "Signal indicatif";
+  } else {
+    title = "Marché sans direction claire";
+    description = "Les moyennes mobiles ne confirment pas une tendance.";
+    tag = "ATTENTE";
+    confidence = "Non déterminée";
+  }
+
+  $("signalTitle").textContent = title;
+  $("signalDesc").textContent = description;
+  $("signalTag").textContent = tag;
+  $("signalTag").className = tag==="ATTENTE" ? "tag wait":"tag";
+  $("confidence").textContent = confidence;
+}
+
+function updateLeverage() {
+  const lev = Number($("leverage").value);
+  $("levText").textContent = lev + "x";
+  $("riskInfo").textContent =
+    "Levier sélectionné : " + lev +
+    "x. Une variation défavorable du marché peut entraîner une perte rapide.";
+}
+
+$("leverage").addEventListener("input",updateLeverage);
+$("pair").addEventListener("change",loadChart);
+
+function addHistory(text) {
+  const history = $("history");
+  if(history.textContent.includes("Aucune simulation")) history.innerHTML="";
+  const item = document.createElement("div");
+  item.className = "market-row";
+  item.textContent = new Date().toLocaleTimeString("fr-FR") + " — " + text;
+  history.prepend(item);
+}
+
+function startSimulation() {
+  const amount = Number($("amount").value);
+  const stop = Number($("stop").value);
+  const target = Number($("target").value);
+  const risk = Number($("risk").value);
+
+  if(!Number.isFinite(amount) || amount <= 0 || amount > virtualBalance) {
+    alert("Montant invalide ou supérieur au capital virtuel.");
+    return;
+  }
+  if(stop <= 0 || target <= 0 || risk <= 0 || risk > 5) {
+    alert("Vérifiez les paramètres de risque.");
+    return;
+  }
+
+  if(running) return;
+  running = true;
+  $("start").disabled = true;
+  addHistory("Simulation démarrée — aucune transaction réelle.");
+
+  timer = setInterval(() => {
+    if(!running) return;
+    loadMarkets();
+    loadChart();
+  },30000);
+}
+
+function stopSimulation() {
+  running = false;
+  clearInterval(timer);
+  $("start").disabled = false;
+  addHistory("Simulation arrêtée.");
+}
+
+$("start").addEventListener("click",startSimulation);
+$("stopBtn").addEventListener("click",stopSimulation);
+
+updateLeverage();
+loadMarkets();
+loadChart();
+
+window.addEventListener("resize",drawChart);
+</script>
+</body>
+</html>
