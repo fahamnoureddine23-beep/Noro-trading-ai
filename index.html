@@ -1,529 +1,265 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#090b13">
-  <title>AI Trading Pro</title>
-  <style>
-    :root {
-      --bg:#090b13;
-      --panel:#111522;
-      --panel2:#171d2d;
-      --border:#252d40;
-      --text:#f3f5ff;
-      --muted:#8992a8;
-      --green:#00e5a0;
-      --red:#ff5575;
-      --purple:#9167ff;
-      --blue:#4b9cff;
-    }
-    * { box-sizing:border-box; }
-    body {
-      margin:0;
-      background:var(--bg);
-      color:var(--text);
-      font-family:Inter,Arial,sans-serif;
-    }
-    button,select,input { font:inherit; }
-    .app { max-width:1200px; margin:auto; padding:20px; }
-    header {
-      display:flex; justify-content:space-between;
-      align-items:center; gap:15px; flex-wrap:wrap;
-      padding:12px 0 25px;
-    }
-    .brand { display:flex; align-items:center; gap:12px; }
-    .logo {
-      width:43px;height:43px;border-radius:13px;
-      display:grid;place-items:center;
-      background:linear-gradient(135deg,#9167ff,#4b9cff);
-      font-size:23px;font-weight:bold;
-    }
-    h1 { font-size:21px;margin:0; }
-    .subtitle { color:var(--muted);font-size:12px;margin-top:5px; }
-    .status {
-      padding:9px 13px;border-radius:20px;
-      border:1px solid #235d4d;color:var(--green);
-      font-size:12px;
-    }
-    .notice {
-      background:#211b36;border:1px solid #493b71;
-      padding:13px 15px;border-radius:12px;
-      color:#d2c5ff;font-size:12px;line-height:1.6;
-      margin-bottom:20px;
-    }
-    .grid {
-      display:grid;grid-template-columns:repeat(4,1fr);
-      gap:14px;margin-bottom:18px;
-    }
-    .card {
-      background:var(--panel);
-      border:1px solid var(--border);
-      border-radius:16px;padding:18px;
-      min-width:0;
-    }
-    .label { color:var(--muted);font-size:12px; }
-    .value { font-size:25px;font-weight:750;margin-top:12px; }
-    .green { color:var(--green); }
-    .red { color:var(--red); }
-    .section-title {
-      font-size:16px;font-weight:700;margin:0 0 15px;
-    }
-    .main-grid {
-      display:grid;grid-template-columns:1.5fr 1fr;gap:15px;
-    }
-    .market-row {
-      display:flex;align-items:center;justify-content:space-between;
-      padding:13px 0;border-bottom:1px solid var(--border);
-      gap:10px;
-    }
-    .market-row:last-child { border:0; }
-    .coin { font-weight:700; }
-    .muted { color:var(--muted);font-size:11px;margin-top:4px; }
-    .price { text-align:right;font-weight:700; }
-    .settings { display:grid;grid-template-columns:1fr 1fr;gap:12px; }
-    .field label {
-      display:block;color:var(--muted);
-      font-size:12px;margin-bottom:8px;
-    }
-    input,select {
-      width:100%;padding:12px;
-      background:var(--panel2);border:1px solid var(--border);
-      color:white;border-radius:10px;outline:none;
-    }
-    input:focus,select:focus { border-color:var(--purple); }
-    .wide { grid-column:1/-1; }
-    .range-line {
-      display:flex;justify-content:space-between;
-      color:var(--muted);font-size:12px;margin-bottom:8px;
-    }
-    input[type=range] { padding:0;accent-color:var(--purple); }
-    .leverage {
-      font-size:23px;color:var(--purple);font-weight:800;
-    }
-    .button {
-      border:0;border-radius:11px;padding:13px;
-      font-weight:750;cursor:pointer;width:100%;
-      color:white;background:linear-gradient(120deg,#7955e8,#4b83ee);
-    }
-    .button.secondary {
-      background:#222a3b;border:1px solid var(--border);
-    }
-    .button:disabled { opacity:.5;cursor:not-allowed; }
-    .signal {
-      padding:15px;border-radius:12px;
-      background:var(--panel2);margin-top:12px;
-    }
-    .signal-head {
-      display:flex;justify-content:space-between;align-items:center;
-      gap:10px;
-    }
-    .tag {
-      padding:6px 10px;border-radius:20px;
-      font-size:11px;font-weight:bold;
-      background:#1d3c34;color:var(--green);
-    }
-    .tag.wait { background:#393124;color:#ffce78; }
-    .chart-wrap { height:235px;width:100%;margin-top:10px; }
-    canvas { width:100%;height:100%; }
-    .footer {
-      color:var(--muted);font-size:11px;
-      text-align:center;padding:25px 0;
-    }
-    .small-note {
-      color:var(--muted);font-size:11px;line-height:1.6;
-      margin-top:12px;
-    }
-    @media(max-width:760px) {
-      .grid { grid-template-columns:repeat(2,1fr); }
-      .main-grid { grid-template-columns:1fr; }
-      .app { padding:14px; }
-      .value { font-size:21px; }
-    }
-    @media(max-width:380px) {
-      .settings { grid-template-columns:1fr; }
-      .wide { grid-column:auto; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Trading Pro</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#080d19;color:#fff;
+ font-family:Arial,sans-serif;
+}
+header{
+ height:65px;display:flex;align-items:center;
+ padding:0 16px;gap:15px;
+ background:#101a2c;border-bottom:1px solid #263650;
+ position:sticky;top:0;z-index:5;
+}
+#menuBtn{
+ background:#172944;border:1px solid #34547e;
+ color:#65c9ff;border-radius:10px;
+ font-size:25px;padding:7px 13px;
+}
+.logo{font-size:19px;font-weight:bold;color:#62caff}
+.sidebar{
+ position:fixed;top:65px;bottom:0;left:0;
+ width:265px;background:#101a2c;
+ border-right:1px solid #263650;
+ padding:15px;z-index:4;
+ transform:translateX(-100%);
+ transition:transform .3s ease;
+ display:flex;flex-direction:column;
+}
+.sidebar.open{transform:translateX(0)}
+.nav{
+ display:flex;align-items:center;gap:13px;
+ padding:13px 10px;margin:4px 0;
+ border-radius:12px;color:#dceaff;
+ background:#172944;border:1px solid #243d60;
+ cursor:pointer;font-size:14px;
+}
+.nav:active{background:#174c70}
+.ico{
+ width:35px;height:35px;border-radius:11px;
+ display:grid;place-items:center;
+ background:linear-gradient(145deg,#243e70,#111a36);
+ box-shadow:0 0 12px #168bff55;
+ font-size:20px;
+}
+.nf{
+ margin-top:auto;text-align:center;padding:20px 5px;
+ border-top:1px solid #30425d;
+ color:#69caff;font-weight:bold;
+ text-shadow:0 0 12px #168bff;
+}
+.nf strong{display:block;font-size:32px}
+main{padding:18px;max-width:900px;margin:auto}
+.card{
+ background:#111e32;border:1px solid #263d60;
+ border-radius:16px;padding:17px;margin-bottom:15px;
+}
+h2{font-size:19px;color:#6bcaff}
+.stat{font-size:25px;font-weight:bold;color:#62e6b5}
+input,select{
+ width:100%;padding:12px;margin:8px 0;
+ border-radius:9px;border:1px solid #365477;
+ background:#0b1424;color:white;
+}
+button.action{
+ width:100%;padding:13px;border:0;border-radius:10px;
+ background:linear-gradient(90deg,#087bdb,#6739d5);
+ color:white;font-weight:bold;margin-top:8px;
+}
+#overlay{
+ display:none;position:fixed;inset:65px 0 0;
+ background:#0009;z-index:3;
+}
+#overlay.show{display:block}
+</style>
 </head>
 <body>
-<div class="app">
+<header>
+<button id="menuBtn" onclick="toggleMenu()">☰</button>
+<div class="logo">⚡ AI TRADING PRO</div>
+</header>
 
-  <header>
-    <div class="brand">
-      <div class="logo">AI</div>
-      <div>
-        <h1>AI TRADING PRO</h1>
-        <div class="subtitle">Intelligence • Analyse • Performance</div>
-      </div>
-    </div>
-    <div class="status">● Marché connecté</div>
-  </header>
+<div id="overlay" onclick="toggleMenu()"></div>
+<aside class="sidebar" id="sidebar">
+<div class="nav" onclick="showPage('dashboard')"><span class="ico">💎</span> Tableau de bord</div>
+<div class="nav" onclick="showPage('scanner')"><span class="ico">🔮</span> AI Scanner</div>
+<div class="nav" onclick="showPage('prediction')"><span class="ico">🧠</span> Prédictions IA</div>
+<div class="nav" onclick="showPage('analysis')"><span class="ico">📊</span> Analyse technique</div>
+<div class="nav" onclick="showPage('trade')"><span class="ico">⚔️</span> Long / Short</div>
+<div class="nav" onclick="showPage('bot')"><span class="ico">🤖</span> Trading automatique</div>
+<div class="nav" onclick="showPage('risk')"><span class="ico">🛡️</span> Gestion du risque</div>
+<div class="nav" onclick="showPage('history')"><span class="ico">📜</span> Historique</div>
+<div class="nav" onclick="showPage('backtest')"><span class="ico">🧪</span> Backtesting</div>
+<div class="nav" onclick="showPage('settings')"><span class="ico">⚙️</span> Paramètres</div>
+<div class="nf"><strong>NF</strong> DESIGN • CONCEPTION</div>
+</aside>
 
-  <div class="notice">
-    ⚠ MODE SIMULATION — Les prix proviennent du marché public Binance.
-    Aucune transaction réelle n'est exécutée. Le trading avec effet de levier
-    comporte un risque élevé de perte et de liquidation.
-  </div>
-
-  <div class="grid">
-    <div class="card">
-      <div class="label">Capital virtuel</div>
-      <div class="value" id="balance">10 000 $</div>
-      <div class="muted">Compte de simulation</div>
-    </div>
-    <div class="card">
-      <div class="label">Profit / Perte</div>
-      <div class="value green" id="profit">0.00 $</div>
-      <div class="muted">Résultat simulé</div>
-    </div>
-    <div class="card">
-      <div class="label">Prix BTC / USDT</div>
-      <div class="value" id="btcPrice">--</div>
-      <div class="muted" id="btcChange">Chargement...</div>
-    </div>
-    <div class="card">
-      <div class="label">État du système</div>
-      <div class="value green" style="font-size:19px">ACTIF</div>
-      <div class="muted">Surveillance du marché</div>
-    </div>
-  </div>
-
-  <div class="main-grid">
-    <div class="card">
-      <h2 class="section-title">📊 Marchés en direct</h2>
-      <div id="markets">
-        <div class="market-row">Chargement des marchés...</div>
-      </div>
-      <div class="chart-wrap">
-        <canvas id="chart"></canvas>
-      </div>
-      <div class="small-note">
-        Données publiques Binance. Les cours peuvent subir des variations rapides.
-      </div>
-    </div>
-
-    <div>
-      <div class="card">
-        <h2 class="section-title">⚙ Configuration du trading</h2>
-        <div class="settings">
-          <div class="field wide">
-            <label>Paire de trading</label>
-            <select id="pair">
-              <option>BTCUSDT</option>
-              <option>ETHUSDT</option>
-              <option>BNBUSDT</option>
-              <option>SOLUSDT</option>
-              <option>XRPUSDT</option>
-              <option>ADAUSDT</option>
-            </select>
-          </div>
-
-          <div class="field wide">
-            <div class="range-line">
-              <label>Effet de levier (simulation)</label>
-              <span class="leverage" id="levText">2x</span>
-            </div>
-            <input type="range" id="leverage" min="1" max="100" value="2">
-            <div class="range-line">
-              <span>1x</span><span>100x</span>
-            </div>
-          </div>
-
-          <div class="field">
-            <label>Capital par position ($)</label>
-            <input type="number" id="amount" min="1" max="10000" value="100">
-          </div>
-          <div class="field">
-            <label>Stop Loss (%)</label>
-            <input type="number" id="stop" min="0.1" max="20" step="0.1" value="1">
-          </div>
-          <div class="field">
-            <label>Take Profit (%)</label>
-            <input type="number" id="target" min="0.1" max="50" step="0.1" value="2">
-          </div>
-          <div class="field">
-            <label>Risque maximum (%)</label>
-            <input type="number" id="risk" min="0.1" max="5" step="0.1" value="1">
-          </div>
-        </div>
-
-        <div class="small-note" id="riskInfo">
-          Levier sélectionné : 2x. Simulation uniquement.
-        </div>
-        <button class="button" id="start" style="margin-top:15px">
-          ▶ Démarrer la simulation
-        </button>
-        <button class="button secondary" id="stopBtn" style="margin-top:9px">
-          ■ Arrêter
-        </button>
-      </div>
-
-      <div class="card" style="margin-top:15px">
-        <h2 class="section-title">🤖 Analyse du marché</h2>
-        <div class="signal">
-          <div class="signal-head">
-            <strong id="signalTitle">Analyse en cours</strong>
-            <span class="tag wait" id="signalTag">ATTENTE</span>
-          </div>
-          <p class="muted" id="signalDesc">
-            Collecte des données de marché...
-          </p>
-          <div class="range-line">
-            <span>Confiance indicative</span>
-            <strong id="confidence">--</strong>
-          </div>
-        </div>
-        <div class="small-note">
-          Analyse technique simplifiée basée sur les moyennes mobiles.
-          Ce n'est pas une prédiction garantie ni un modèle d'IA entraîné.
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card" style="margin-top:15px">
-    <h2 class="section-title">📜 Historique des simulations</h2>
-    <div id="history" class="muted">Aucune simulation pour le moment.</div>
-  </div>
-
-  <div class="footer">
-    AI Trading Pro © 2026 — Outil d'analyse et de simulation.
-    Le trading comporte un risque de perte en capital.
-  </div>
+<main id="content">
+<div class="card">
+<h2>💎 Tableau de bord</h2>
+<p>Bienvenue dans AI Trading Pro</p>
+<div class="stat">Mode Simulation</div>
+<p>Trading sécurisé • Analyse du marché</p>
+</div>
+<div class="card">
+<h2>📈 Marché Crypto</h2>
+<label>Symbole</label>
+<select id="symbol">
+<option>BTCUSDT</option>
+<option>ETHUSDT</option>
+<option>BNBUSDT</option>
+<option>SOLUSDT</option>
+</select>
+<div id="price">Chargement du prix...</div>
+</div><div class="card" id="scanner">
+<h2>🔮 AI Market Scanner</h2>
+<p>فحص بيانات السوق وإظهار اتجاه السعر.</p>
+<button class="action" onclick="scanMarket()">Lancer le Scanner</button>
+<div id="scanResult">En attente d'analyse...</div>
 </div>
 
+<div class="card" id="prediction">
+<h2>🧠 Prédictions IA</h2>
+<p>إشارات مبنية على متوسطات الأسعار، وليست ضماناً للتوقع.</p>
+<div id="predictionResult">En attente...</div>
+</div>
+
+<div class="card" id="analysis">
+<h2>📊 Analyse technique</h2>
+<div id="analysisResult">Analyse en attente...</div>
+</div>
+
+<div class="card" id="trade">
+<h2>⚔️ Long / Short</h2>
+<label>Levier</label>
+<select id="leverage">
+<option value="2">2x</option>
+<option value="5">5x</option>
+<option value="10">10x</option>
+<option value="20">20x</option>
+<option value="50">50x</option>
+<option value="100">100x</option>
+</select>
+<p>Mode : Simulation uniquement</p>
+<button class="action" onclick="alert('Simulation uniquement : aucun ordre réel envoyé.')">Simuler un ordre</button>
+</div>
+
+<div class="card" id="bot">
+<h2>🤖 Trading automatique</h2>
+<p>Robot de surveillance du marché en simulation.</p>
+<button class="action" onclick="startBot()">Démarrer la simulation</button>
+<button class="action" onclick="stopBot()">Arrêter</button>
+<div id="botStatus">Robot arrêté</div>
+</div>
+
+<div class="card" id="risk">
+<h2>🛡️ Gestion du risque</h2>
+<label>Risque par opération (%)</label>
+<input type="number" id="riskValue" value="1" min="0.1" max="2" step="0.1">
+<label>Stop Loss (%)</label>
+<input type="number" id="stopLoss" value="1" min="0.1" max="10" step="0.1">
+<label>Take Profit (%)</label>
+<input type="number" id="takeProfit" value="2" min="0.1" max="20" step="0.1">
+</div>
+
+<div class="card" id="history">
+<h2>📜 Historique</h2>
+<div id="historyResult">Aucune opération enregistrée.</div>
+</div>
+
+<div class="card" id="backtest">
+<h2>🧪 Backtesting</h2>
+<p>اختبار تاريخي غير متوفر بعد.</p>
+<div>Module à développer.</div>
+</div>
+
+<div class="card" id="settings">
+<h2>⚙️ Paramètres</h2>
+<p>Version 1.1</p>
+<p>AI Trading Pro • Design NF</p>
+<p>Mode simulation uniquement.</p>
+</div>
+</main>
+
 <script>
-"use strict";
+let botTimer=null;
 
-const $ = id => document.getElementById(id);
-const API = "https://data-api.binance.vision";
-let prices = {};
-let candles = [];
-let running = false;
-let virtualBalance = 10000;
-let virtualProfit = 0;
-let timer = null;
-
-function money(n) {
-  return Number(n).toLocaleString("fr-FR", {
-    minimumFractionDigits:2,
-    maximumFractionDigits:2
-  }) + " $";
+function toggleMenu(){
+ const side=document.getElementById("sidebar");
+ const overlay=document.getElementById("overlay");
+ side.classList.toggle("open");
+ overlay.classList.toggle("show");
 }
 
-async function getJSON(url) {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error("Erreur réseau " + response.status);
-  return response.json();
+function showPage(id){
+ document.querySelectorAll("main .card").forEach(card=>{
+  card.style.display="none";
+ });
+ const page=document.getElementById(id);
+ if(page) page.style.display="block";
+ toggleMenu();
+ window.scrollTo(0,0);
 }
 
-async function loadMarkets() {
-  try {
-    const symbols = ["BTCUSDT","ETHUSDT","BNBUSDT","SOLUSDT","XRPUSDT","ADAUSDT"];
-    const results = await getJSON(API + "/api/v3/ticker/24hr");
-    const selected = results.filter(x => symbols.includes(x.symbol));
-
-    $("markets").innerHTML = selected.map(item => {
-      const change = Number(item.priceChangePercent);
-      prices[item.symbol] = Number(item.lastPrice);
-      return `
-        <div class="market-row">
-          <div>
-            <div class="coin">${item.symbol.replace("USDT","")} / USDT</div>
-            <div class="muted">Volume 24h: ${Number(item.volume).toFixed(2)}</div>
-          </div>
-          <div class="price">
-            ${Number(item.lastPrice).toLocaleString("fr-FR")}
-            <div class="${change >= 0 ? "green":"red"}" style="font-size:12px;margin-top:5px">
-              ${change >= 0 ? "+" : ""}${change.toFixed(2)}%
-            </div>
-          </div>
-        </div>`;
-    }).join("");
-
-    $("btcPrice").textContent =
-      Number(prices.BTCUSDT).toLocaleString("fr-FR") + " $";
-
-    const btc = selected.find(x => x.symbol === "BTCUSDT");
-    if (btc) {
-      const change = Number(btc.priceChangePercent);
-      $("btcChange").textContent =
-        (change >= 0 ? "+" : "") + change.toFixed(2) + "% / 24h";
-      $("btcChange").className = change >= 0 ? "muted green":"muted red";
-    }
-  } catch(error) {
-    $("markets").innerHTML =
-      '<div class="muted">Impossible de charger les données. Vérifiez votre connexion.</div>';
-  }
+async function loadPrice(){
+ const symbol=document.getElementById("symbol").value;
+ const output=document.getElementById("price");
+ output.textContent="Chargement...";
+ try{
+  const response=await fetch(
+   "https://api.binance.com/api/v3/ticker/price?symbol="+symbol
+  );
+  if(!response.ok) throw new Error();
+  const data=await response.json();
+  output.innerHTML="<h2>"+symbol+"</h2><div class='stat'>"+Number(data.price).toLocaleString("en-US")+" USDT</div>";
+ }catch(e){
+  output.textContent="Prix indisponible. Réessayez.";
+ }
 }
 
-async function loadChart() {
-  try {
-    const pair = $("pair").value;
-    candles = await getJSON(
-      API + "/api/v3/klines?symbol=" + pair + "&interval=1h&limit=40"
-    );
-    drawChart();
-    analyse();
-  } catch(error) {
-    $("signalTitle").textContent = "Données indisponibles";
-    $("signalDesc").textContent = "Réessayez plus tard.";
-  }
+async function scanMarket(){
+ const symbol=document.getElementById("symbol").value;
+ const result=document.getElementById("scanResult");
+ result.textContent="Analyse du marché...";
+ try{
+  const response=await fetch(
+   "https://api.binance.com/api/v3/klines?symbol="+symbol+"&interval=1h&limit=50"
+  );
+  if(!response.ok) throw new Error();
+  const candles=await response.json();
+  const closes=candles.map(c=>Number(c[4]));
+  const last=closes[closes.length-1];
+  const avg=closes.reduce((a,b)=>a+b,0)/closes.length;
+  const signal=last>avg?"Tendance haussière":"Tendance baissière";
+  result.innerHTML="<h3>"+signal+"</h3><p>Prix : "+last+"</p><p>Moyenne 50 périodes : "+avg.toFixed(2)+"</p><p>Signal indicatif, pas une prédiction IA.</p>";
+  document.getElementById("predictionResult").textContent=signal;
+  document.getElementById("analysisResult").textContent="Prix actuel : "+last+" | Moyenne : "+avg.toFixed(2);
+ }catch(e){
+  result.textContent="Erreur de connexion aux données Binance.";
+ }
 }
 
-function drawChart() {
-  const canvas = $("chart");
-  const rect = canvas.getBoundingClientRect();
-  if (!rect.width || !rect.height) return;
-
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = rect.width * dpr;
-  canvas.height = rect.height * dpr;
-
-  const ctx = canvas.getContext("2d");
-  ctx.scale(dpr,dpr);
-
-  const w = rect.width, h = rect.height;
-  ctx.clearRect(0,0,w,h);
-
-  if (!candles.length) return;
-
-  const values = candles.map(c => Number(c[4]));
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const padding = 18;
-  const range = max-min || 1;
-
-  ctx.strokeStyle = "#252d40";
-  ctx.lineWidth = 1;
-  for(let i=1;i<4;i++) {
-    const y = h*i/4;
-    ctx.beginPath();
-    ctx.moveTo(0,y);
-    ctx.lineTo(w,y);
-    ctx.stroke();
-  }
-
-  ctx.beginPath();
-  values.forEach((v,i) => {
-    const x = padding + i*(w-padding*2)/(values.length-1);
-    const y = h-padding - ((v-min)/range)*(h-padding*2);
-    if(i===0) ctx.moveTo(x,y);
-    else ctx.lineTo(x,y);
-  });
-  ctx.strokeStyle = "#9167ff";
-  ctx.lineWidth = 2.5;
-  ctx.stroke();
-
-  ctx.lineTo(w-padding,h);
-  ctx.lineTo(padding,h);
-  ctx.closePath();
-  ctx.fillStyle = "rgba(145,103,255,0.10)";
-  ctx.fill();
+function startBot(){
+ if(botTimer) return;
+ document.getElementById("botStatus").textContent="Simulation active : surveillance du prix.";
+ scanMarket();
+ botTimer=setInterval(scanMarket,60000);
 }
 
-function average(arr) {
-  return arr.reduce((a,b)=>a+b,0)/arr.length;
+function stopBot(){
+ if(botTimer) clearInterval(botTimer);
+ botTimer=null;
+ document.getElementById("botStatus").textContent="Robot arrêté.";
 }
 
-function analyse() {
-  if(candles.length < 25) return;
-
-  const closes = candles.map(c=>Number(c[4]));
-  const shortMA = average(closes.slice(-7));
-  const longMA = average(closes.slice(-25));
-  const last = closes[closes.length-1];
-
-  let title, description, tag, confidence;
-
-  if(shortMA > longMA && last > shortMA) {
-    title = "Tendance haussière";
-    description = "La moyenne mobile courte est supérieure à la moyenne longue.";
-    tag = "ACHAT POTENTIEL";
-    confidence = "Signal indicatif";
-  } else if(shortMA < longMA && last < shortMA) {
-    title = "Tendance baissière";
-    description = "La moyenne mobile courte est inférieure à la moyenne longue.";
-    tag = "VENTE POTENTIELLE";
-    confidence = "Signal indicatif";
-  } else {
-    title = "Marché sans direction claire";
-    description = "Les moyennes mobiles ne confirment pas une tendance.";
-    tag = "ATTENTE";
-    confidence = "Non déterminée";
-  }
-
-  $("signalTitle").textContent = title;
-  $("signalDesc").textContent = description;
-  $("signalTag").textContent = tag;
-  $("signalTag").className = tag==="ATTENTE" ? "tag wait":"tag";
-  $("confidence").textContent = confidence;
-}
-
-function updateLeverage() {
-  const lev = Number($("leverage").value);
-  $("levText").textContent = lev + "x";
-  $("riskInfo").textContent =
-    "Levier sélectionné : " + lev +
-    "x. Une variation défavorable du marché peut entraîner une perte rapide.";
-}
-
-$("leverage").addEventListener("input",updateLeverage);
-$("pair").addEventListener("change",loadChart);
-
-function addHistory(text) {
-  const history = $("history");
-  if(history.textContent.includes("Aucune simulation")) history.innerHTML="";
-  const item = document.createElement("div");
-  item.className = "market-row";
-  item.textContent = new Date().toLocaleTimeString("fr-FR") + " — " + text;
-  history.prepend(item);
-}
-
-function startSimulation() {
-  const amount = Number($("amount").value);
-  const stop = Number($("stop").value);
-  const target = Number($("target").value);
-  const risk = Number($("risk").value);
-
-  if(!Number.isFinite(amount) || amount <= 0 || amount > virtualBalance) {
-    alert("Montant invalide ou supérieur au capital virtuel.");
-    return;
-  }
-  if(stop <= 0 || target <= 0 || risk <= 0 || risk > 5) {
-    alert("Vérifiez les paramètres de risque.");
-    return;
-  }
-
-  if(running) return;
-  running = true;
-  $("start").disabled = true;
-  addHistory("Simulation démarrée — aucune transaction réelle.");
-
-  timer = setInterval(() => {
-    if(!running) return;
-    loadMarkets();
-    loadChart();
-  },30000);
-}
-
-function stopSimulation() {
-  running = false;
-  clearInterval(timer);
-  $("start").disabled = false;
-  addHistory("Simulation arrêtée.");
-}
-
-$("start").addEventListener("click",startSimulation);
-$("stopBtn").addEventListener("click",stopSimulation);
-
-updateLeverage();
-loadMarkets();
-loadChart();
-
-window.addEventListener("resize",drawChart);
+document.getElementById("symbol").addEventListener("change",loadPrice);
+loadPrice();
+showPage("dashboard");
 </script>
 </body>
 </html>
